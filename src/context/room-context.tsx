@@ -42,14 +42,15 @@ export const RoomProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const q = query(collection(db, "rooms"), orderBy("name"));
+    const q = query(collection(db, "rooms"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, async (querySnapshot) => {
       if (querySnapshot.empty && querySnapshot.metadata.fromCache === false) {
         console.log("No rooms found. Seeding database...");
         const batch = writeBatch(db);
         initialRooms.forEach(room => {
+            const { id, ...rest } = room;
             const roomWithTimestamp = {
-                ...room,
+                ...rest,
                 createdAt: Timestamp.now()
             };
             const roomRef = doc(collection(db, 'rooms'));
@@ -59,8 +60,8 @@ export const RoomProvider = ({ children }: { children: ReactNode }) => {
         console.log("Database seeded.");
       } else {
         const roomsData = querySnapshot.docs.map(doc => ({
+            ...doc.data(),
             id: doc.id,
-            ...doc.data()
         } as Room));
         setRooms(roomsData);
       }

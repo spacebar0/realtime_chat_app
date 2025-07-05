@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { ChatSidebar } from "@/components/chat/chat-sidebar"
 import { ChatHeader } from "@/components/chat/chat-header"
-import { recentRooms as mockRecentRooms } from "@/lib/mock-data"
 import { useRoom } from "@/context/room-context"
 import { useUser } from "@/context/user-context"
 import { Loader2 } from "lucide-react"
@@ -25,10 +24,9 @@ export default function ChatLayout({
     }
   }, [userLoading, currentUser, router]);
 
-  const allRoomsData = rooms;
+  const allRoomsData = [...rooms].sort((a, b) => a.name.localeCompare(b.name));
   const popularRoomsData = [...rooms].sort((a, b) => b.userCount - a.userCount).slice(0, 5);
-  // Keep recent rooms mock for now as we don't track participation
-  const recentRoomsData = mockRecentRooms.map(rr => rooms.find(r => r.id === rr.id) || rr).slice(0, 5);
+  const recentRoomsData = rooms.slice(0, 5);
 
   if (userLoading || roomsLoading || !currentUser) {
     return (

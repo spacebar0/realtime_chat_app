@@ -5,7 +5,7 @@ export type User = {
 };
 
 export type Message = {
-  id: string;
+  id:string;
   text: string;
   timestamp: string;
   user: User;
@@ -16,4 +16,5 @@ export type Room = {
   name: string;
   userCount: number;
   messages: Message[];
+  createdAt?: any;
 };
