@@ -8,7 +8,7 @@ export default function ChatPage() {
                 <CardHeader>
                     <CardTitle className="flex flex-col items-center justify-center gap-4">
                         <MessageSquare className="w-16 h-16 text-primary" />
-                        Welcome to ChitChat Hub!
+                        Welcome to Zync!
                     </CardTitle>
                 </CardHeader>
                 <CardContent>

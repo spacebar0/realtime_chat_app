@@ -36,7 +36,7 @@ export function ChatSidebar({ popularRooms, recentRooms, allRooms }: ChatSidebar
       <SidebarHeader>
         <div className="flex items-center gap-2">
             <Bot size={24} />
-            <h1 className="text-xl font-semibold">ChitChat Hub</h1>
+            <h1 className="text-xl font-semibold">Zync</h1>
         </div>
       </SidebarHeader>
       <SidebarContent>

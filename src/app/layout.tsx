@@ -5,7 +5,7 @@ import { UserProvider } from '@/context/user-context';
 import { RoomProvider } from '@/context/room-context';
 
 export const metadata: Metadata = {
-  title: 'ChitChat Hub',
+  title: 'Zync',
   description: 'A modern chat application.',
 };
 
