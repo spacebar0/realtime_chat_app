@@ -1,0 +1,93 @@
+"use client"
+
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarSeparator,
+} from "@/components/ui/sidebar"
+import { MessageSquare, Star, History, Users, Bot } from "lucide-react"
+import { CreateRoomDialog } from "./create-room-dialog"
+import type { Room } from "@/lib/types"
+
+interface ChatSidebarProps {
+  popularRooms: Room[];
+  recentRooms: Room[];
+  allRooms: Room[];
+}
+
+export function ChatSidebar({ popularRooms, recentRooms, allRooms }: ChatSidebarProps) {
+  const pathname = usePathname()
+
+  const isActive = (roomId: string) => {
+    return pathname === `/chat/room/${roomId}`
+  }
+
+  return (
+    <Sidebar>
+      <SidebarHeader>
+        <div className="flex items-center gap-2">
+            <Bot size={24} />
+            <h1 className="text-xl font-semibold">ChitChat Hub</h1>
+        </div>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarMenu>
+            <SidebarMenuItem>
+                <CreateRoomDialog />
+            </SidebarMenuItem>
+            <SidebarSeparator />
+            <SidebarMenuItem>
+                <h2 className="px-2 pt-2 text-xs font-semibold text-muted-foreground flex items-center gap-2"><Star className="w-4 h-4" /> Popular Rooms</h2>
+                <SidebarMenu>
+                    {popularRooms.map(room => (
+                        <SidebarMenuItem key={room.id}>
+                            <Link href={`/chat/room/${room.id}`} passHref>
+                                <SidebarMenuButton isActive={isActive(room.id)} className="w-full justify-start">
+                                    # {room.name}
+                                </SidebarMenuButton>
+                            </Link>
+                        </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </SidebarMenuItem>
+            <SidebarSeparator />
+            <SidebarMenuItem>
+                <h2 className="px-2 pt-2 text-xs font-semibold text-muted-foreground flex items-center gap-2"><History className="w-4 h-4" /> Recent Rooms</h2>
+                 <SidebarMenu>
+                    {recentRooms.map(room => (
+                        <SidebarMenuItem key={room.id}>
+                             <Link href={`/chat/room/${room.id}`} passHref>
+                                <SidebarMenuButton isActive={isActive(room.id)} className="w-full justify-start">
+                                    # {room.name}
+                                </SidebarMenuButton>
+                            </Link>
+                        </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </SidebarMenuItem>
+            <SidebarSeparator />
+             <SidebarMenuItem>
+                <h2 className="px-2 pt-2 text-xs font-semibold text-muted-foreground flex items-center gap-2"><MessageSquare className="w-4 h-4" /> All Rooms</h2>
+                 <SidebarMenu>
+                    {allRooms.map(room => (
+                        <SidebarMenuItem key={room.id}>
+                             <Link href={`/chat/room/${room.id}`} passHref>
+                                <SidebarMenuButton isActive={isActive(room.id)} className="w-full justify-start">
+                                    # {room.name}
+                                </SidebarMenuButton>
+                            </Link>
+                        </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarContent>
+    </Sidebar>
+  )
+}
