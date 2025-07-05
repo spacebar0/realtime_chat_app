@@ -1,17 +1,23 @@
+"use client"
+
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { ChatSidebar } from "@/components/chat/chat-sidebar"
 import { ChatHeader } from "@/components/chat/chat-header"
-import { popularRooms, recentRooms, rooms } from "@/lib/mock-data"
+import { recentRooms as mockRecentRooms } from "@/lib/mock-data"
+import { useRoom } from "@/context/room-context"
 
 export default function ChatLayout({
   children
 }: {
   children: React.ReactNode
 }) {
-  // In a real app, you'd fetch this data
+  const { rooms } = useRoom();
+
   const allRoomsData = rooms;
-  const popularRoomsData = popularRooms;
-  const recentRoomsData = recentRooms;
+  const popularRoomsData = [...rooms].sort((a, b) => b.userCount - a.userCount).slice(0, 5);
+  // Keep recent rooms mock for now as we don't track participation
+  const recentRoomsData = mockRecentRooms.map(rr => rooms.find(r => r.id === rr.id) || rr).slice(0, 5);
+
 
   return (
     <SidebarProvider>

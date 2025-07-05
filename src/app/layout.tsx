@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { UserProvider } from '@/context/user-context';
+import { RoomProvider } from '@/context/room-context';
 
 export const metadata: Metadata = {
   title: 'ChitChat Hub',
@@ -22,8 +23,10 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <UserProvider>
-          {children}
-          <Toaster />
+          <RoomProvider>
+            {children}
+            <Toaster />
+          </RoomProvider>
         </UserProvider>
       </body>
     </html>

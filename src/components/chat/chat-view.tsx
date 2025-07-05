@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { getRoomById, rooms } from "@/lib/mock-data"
 import type { Room, Message } from "@/lib/types"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -12,21 +11,19 @@ import { Send, Users, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { formatDistanceToNow } from "date-fns"
 import { useUser } from "@/context/user-context"
+import { useRoom } from "@/context/room-context"
 
 export function ChatView({ roomId }: { roomId: string }) {
   const { currentUser } = useUser()
+  const { getRoomById, sendMessage } = useRoom()
   const [room, setRoom] = useState<Room | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState("")
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const roomData = getRoomById(roomId)
-    if (roomData) {
-      setRoom(roomData)
-      setMessages(roomData.messages)
-    }
-  }, [roomId])
+    setRoom(roomData || null)
+  }, [roomId, getRoomById])
   
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -36,7 +33,7 @@ export function ChatView({ roomId }: { roomId: string }) {
             }
         }, 100);
     }
-  }, [messages])
+  }, [room?.messages])
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault()
@@ -49,14 +46,7 @@ export function ChatView({ roomId }: { roomId: string }) {
       user: currentUser,
     }
 
-    setMessages([...messages, message])
-    
-    // This is a mock implementation, in a real app you'd update a database
-    const roomIndex = rooms.findIndex(r => r.id === roomId);
-    if (roomIndex !== -1) {
-      rooms[roomIndex].messages.push(message);
-    }
-
+    sendMessage(roomId, message)
     setNewMessage("")
   }
 
@@ -94,7 +84,7 @@ export function ChatView({ roomId }: { roomId: string }) {
       <CardContent className="flex-1 p-0">
         <ScrollArea className="h-full" ref={scrollAreaRef}>
           <div className="p-6 space-y-4">
-            {messages.map((message) => (
+            {room.messages.map((message) => (
               <div
                 key={message.id}
                 className={cn(

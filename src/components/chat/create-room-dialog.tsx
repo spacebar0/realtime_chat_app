@@ -15,38 +15,20 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { PlusCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
-import { useRouter } from "next/navigation"
-import { rooms } from "@/lib/mock-data"
 import { SidebarMenuButton } from "@/components/ui/sidebar"
+import { useRoom } from "@/context/room-context"
 
 export function CreateRoomDialog() {
   const [open, setOpen] = useState(false)
   const [roomName, setRoomName] = useState("")
   const { toast } = useToast()
-  const router = useRouter()
+  const { addRoom } = useRoom()
 
   const handleCreateRoom = () => {
     if (roomName.trim().length > 2) {
-      // In a real app, you would call an API to create the room
-      const newRoomId = String(Date.now()); // Use timestamp for a unique ID
-      const newRoom = {
-        id: newRoomId,
-        name: roomName,
-        userCount: 1,
-        messages: [],
-      };
-      
-      // Note: This modifies the mock data array for the current session only.
-      rooms.unshift(newRoom);
-
-      toast({
-        title: "Room Created!",
-        description: `The room "${roomName}" has been successfully created.`,
-      })
-      
+      addRoom(roomName)
       setOpen(false)
       setRoomName("")
-      router.push(`/chat/room/${newRoomId}`)
     } else {
         toast({
             variant: "destructive",

@@ -30,10 +30,4 @@ export const rooms: Room[] = [
   { id: '6', name: 'music-cafe', userCount: 31, messages: generateMessages('6', 12) },
 ];
 
-export const popularRooms: Room[] = [...rooms].sort((a, b) => b.userCount - a.userCount).slice(0, 3);
-
 export const recentRooms: Room[] = [rooms[4], rooms[2], rooms[0], rooms[1], rooms[3]];
-
-export const getRoomById = (id: string): Room | undefined => {
-  return rooms.find(room => room.id === id);
-}
