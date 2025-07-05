@@ -10,15 +10,22 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { LogOut, User } from "lucide-react"
+import { LogOut } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { currentUser } from "@/lib/mock-data"
+import { useUser } from "@/context/user-context"
+import { Skeleton } from "../ui/skeleton"
 
 export function UserMenu() {
   const router = useRouter()
+  const { currentUser, logout } = useUser()
 
   const handleLogout = () => {
+    logout()
     router.push("/login")
+  }
+
+  if (!currentUser) {
+    return <Skeleton className="h-8 w-8 rounded-full" />
   }
   
   return (
@@ -36,7 +43,7 @@ export function UserMenu() {
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{currentUser.name}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {currentUser.name.toLowerCase()}@example.com
+              {currentUser.name.toLowerCase().replace(/\s/g, '')}@example.com
             </p>
           </div>
         </DropdownMenuLabel>

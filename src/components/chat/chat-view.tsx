@@ -1,18 +1,20 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { getRoomById, currentUser, rooms } from "@/lib/mock-data"
+import { getRoomById, rooms } from "@/lib/mock-data"
 import type { Room, Message } from "@/lib/types"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Send, Users } from "lucide-react"
+import { Send, Users, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { formatDistanceToNow } from "date-fns"
+import { useUser } from "@/context/user-context"
 
 export function ChatView({ roomId }: { roomId: string }) {
+  const { currentUser } = useUser()
   const [room, setRoom] = useState<Room | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState("")
@@ -38,7 +40,7 @@ export function ChatView({ roomId }: { roomId: string }) {
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault()
-    if (newMessage.trim() === "" || !room) return
+    if (newMessage.trim() === "" || !room || !currentUser) return
 
     const message: Message = {
       id: `msg-${Date.now()}`,
@@ -56,6 +58,17 @@ export function ChatView({ roomId }: { roomId: string }) {
     }
 
     setNewMessage("")
+  }
+
+  if (!currentUser) {
+    return (
+      <Card className="w-full h-full flex items-center justify-center">
+        <div className="text-center text-muted-foreground flex items-center gap-2">
+            <Loader2 className="w-6 h-6 animate-spin" />
+            <p>Loading your session...</p>
+        </div>
+      </Card>
+    )
   }
   
   if (!room) {
@@ -124,7 +137,7 @@ export function ChatView({ roomId }: { roomId: string }) {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
           />
-          <Button type="submit" size="icon">
+          <Button type="submit" size="icon" disabled={!currentUser}>
             <Send className="h-4 w-4" />
             <span className="sr-only">Send</span>
           </Button>

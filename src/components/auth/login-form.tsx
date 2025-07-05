@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { LogIn } from "lucide-react"
+import { useUser } from "@/context/user-context"
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -30,6 +31,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const router = useRouter()
+  const { login } = useUser()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,8 +41,7 @@ export function LoginForm() {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Mock login logic
-    console.log(values)
+    login(values.username)
     router.push("/chat")
   }
 

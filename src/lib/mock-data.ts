@@ -9,8 +9,6 @@ export const users: User[] = [
   { id: '6', name: 'Frank', avatar: 'https://placehold.co/40x40.png' },
 ];
 
-export const currentUser: User = users[0];
-
 const generateMessages = (roomId: string, count: number): Message[] => {
   return Array.from({ length: count }, (_, i) => {
     const user = users[Math.floor(Math.random() * users.length)];
