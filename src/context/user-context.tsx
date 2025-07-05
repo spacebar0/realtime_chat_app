@@ -6,6 +6,7 @@ import { users } from '@/lib/mock-data';
 
 interface UserContextType {
   currentUser: User | null;
+  loading: boolean;
   login: (username: string) => void;
   logout: () => void;
 }
@@ -14,6 +15,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     try {
@@ -24,6 +26,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("Failed to parse user from localStorage", error);
       localStorage.removeItem('currentUser');
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -48,7 +52,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <UserContext.Provider value={{ currentUser, login, logout }}>
+    <UserContext.Provider value={{ currentUser, loading, login, logout }}>
       {children}
     </UserContext.Provider>
   );

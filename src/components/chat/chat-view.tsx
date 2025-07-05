@@ -51,11 +51,13 @@ export function ChatView({ roomId }: { roomId: string }) {
   }
 
   if (!currentUser) {
+    // This state should not be visible for long, as the layout handles redirection.
+    // It's a fallback while the redirect is processing.
     return (
       <Card className="w-full h-full flex items-center justify-center">
         <div className="text-center text-muted-foreground flex items-center gap-2">
             <Loader2 className="w-6 h-6 animate-spin" />
-            <p>Loading your session...</p>
+            <p>Authenticating...</p>
         </div>
       </Card>
     )

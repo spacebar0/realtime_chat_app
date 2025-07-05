@@ -17,14 +17,14 @@ import { Skeleton } from "../ui/skeleton"
 
 export function UserMenu() {
   const router = useRouter()
-  const { currentUser, logout } = useUser()
+  const { currentUser, logout, loading } = useUser()
 
   const handleLogout = () => {
     logout()
     router.push("/login")
   }
 
-  if (!currentUser) {
+  if (loading || !currentUser) {
     return <Skeleton className="h-8 w-8 rounded-full" />
   }
   

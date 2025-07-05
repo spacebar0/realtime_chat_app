@@ -1,23 +1,45 @@
 "use client"
 
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { ChatSidebar } from "@/components/chat/chat-sidebar"
 import { ChatHeader } from "@/components/chat/chat-header"
 import { recentRooms as mockRecentRooms } from "@/lib/mock-data"
 import { useRoom } from "@/context/room-context"
+import { useUser } from "@/context/user-context"
+import { Loader2 } from "lucide-react"
 
 export default function ChatLayout({
   children
 }: {
   children: React.ReactNode
 }) {
-  const { rooms } = useRoom();
+  const { rooms } = useRoom()
+  const { currentUser, loading: userLoading } = useUser()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!userLoading && !currentUser) {
+      router.replace('/login')
+    }
+  }, [userLoading, currentUser, router]);
 
   const allRoomsData = rooms;
   const popularRoomsData = [...rooms].sort((a, b) => b.userCount - a.userCount).slice(0, 5);
   // Keep recent rooms mock for now as we don't track participation
   const recentRoomsData = mockRecentRooms.map(rr => rooms.find(r => r.id === rr.id) || rr).slice(0, 5);
 
+  if (userLoading || !currentUser) {
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center bg-background">
+        <div className="text-center text-muted-foreground flex items-center gap-4">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <p className="text-lg font-medium">Loading your session...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <SidebarProvider>
