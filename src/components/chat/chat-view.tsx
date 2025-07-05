@@ -99,7 +99,7 @@ export function ChatView({ roomId }: { roomId: string }) {
                     </span>
                   </div>
                   <div className={cn(
-                    "p-3 rounded-lg",
+                    "p-3 rounded-2xl",
                     message.user.id === currentUser.id
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted"
@@ -117,12 +117,12 @@ export function ChatView({ roomId }: { roomId: string }) {
           <Input
             id="message"
             placeholder="Type your message..."
-            className="flex-1"
+            className="flex-1 rounded-full px-4"
             autoComplete="off"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
           />
-          <Button type="submit" size="icon" disabled={!currentUser}>
+          <Button type="submit" size="icon" className="rounded-full" disabled={!currentUser}>
             <Send className="h-4 w-4" />
             <span className="sr-only">Send</span>
           </Button>
