@@ -2,7 +2,7 @@
 
 A modern, real-time chat application built with Next.js and Firebase, featuring a sleek, glassmorphism-inspired dark theme.
 
-<img src="https://placehold.co/800x600.png" alt="Zync application screenshot" data-ai-hint="chat application" />
+<img src="preview.png" alt="Zync application screenshot" data-ai-hint="chat application" />
 
 ## ✨ Features
 
