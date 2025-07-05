@@ -3,7 +3,7 @@ import { MessageSquare } from "lucide-react";
 
 export default function ChatPage() {
     return (
-        <div className="flex items-center justify-center h-[calc(100vh-10rem)]">
+        <div className="flex items-center justify-center h-full">
              <Card className="w-full max-w-lg text-center">
                 <CardHeader>
                     <CardTitle className="flex flex-col items-center justify-center gap-4">

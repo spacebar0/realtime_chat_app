@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { getRoomById, currentUser } from "@/lib/mock-data"
+import { getRoomById, currentUser, rooms } from "@/lib/mock-data"
 import type { Room, Message } from "@/lib/types"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -28,13 +28,17 @@ export function ChatView({ roomId }: { roomId: string }) {
   
   useEffect(() => {
     if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight, behavior: 'smooth' });
+        setTimeout(() => {
+            if (scrollAreaRef.current) {
+                scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight, behavior: 'smooth' });
+            }
+        }, 100);
     }
   }, [messages])
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault()
-    if (newMessage.trim() === "") return
+    if (newMessage.trim() === "" || !room) return
 
     const message: Message = {
       id: `msg-${Date.now()}`,
@@ -44,19 +48,29 @@ export function ChatView({ roomId }: { roomId: string }) {
     }
 
     setMessages([...messages, message])
+    
+    // This is a mock implementation, in a real app you'd update a database
+    const roomIndex = rooms.findIndex(r => r.id === roomId);
+    if (roomIndex !== -1) {
+      rooms[roomIndex].messages.push(message);
+    }
+
     setNewMessage("")
   }
   
   if (!room) {
     return (
       <Card className="w-full h-full flex items-center justify-center">
-        <p>Loading chat...</p>
+        <div className="text-center text-muted-foreground">
+            <p>Room not found.</p>
+            <p>Select a room from the sidebar.</p>
+        </div>
       </Card>
     )
   }
 
   return (
-    <Card className="w-full h-[calc(100vh-8rem)] flex flex-col">
+    <Card className="w-full h-full flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between border-b">
         <CardTitle># {room.name}</CardTitle>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
