@@ -15,16 +15,11 @@ import { useRoom } from "@/context/room-context"
 
 export function ChatView({ roomId }: { roomId: string }) {
   const { currentUser } = useUser()
-  const { getRoomById, sendMessage } = useRoom()
-  const [room, setRoom] = useState<Room | null>(null)
+  const { rooms, sendMessage } = useRoom()
+  const room = rooms.find(r => r.id === roomId) || null
   const [newMessage, setNewMessage] = useState("")
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const roomData = getRoomById(roomId)
-    setRoom(roomData || null)
-  }, [roomId, getRoomById])
-  
   useEffect(() => {
     if (scrollAreaRef.current) {
         setTimeout(() => {
