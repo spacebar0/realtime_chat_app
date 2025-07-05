@@ -30,7 +30,7 @@ export function ChatView({ roomId }: { roomId: string }) {
     }
   }, [room?.messages])
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
     if (newMessage.trim() === "" || !room || !currentUser) return
 
@@ -41,13 +41,11 @@ export function ChatView({ roomId }: { roomId: string }) {
       user: currentUser,
     }
 
-    sendMessage(roomId, message)
+    await sendMessage(roomId, message)
     setNewMessage("")
   }
 
   if (!currentUser) {
-    // This state should not be visible for long, as the layout handles redirection.
-    // It's a fallback while the redirect is processing.
     return (
       <Card className="w-full h-full flex items-center justify-center">
         <div className="text-center text-muted-foreground flex items-center gap-2">

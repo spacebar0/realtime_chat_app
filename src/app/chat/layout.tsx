@@ -15,7 +15,7 @@ export default function ChatLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { rooms } = useRoom()
+  const { rooms, loading: roomsLoading } = useRoom()
   const { currentUser, loading: userLoading } = useUser()
   const router = useRouter()
 
@@ -30,7 +30,7 @@ export default function ChatLayout({
   // Keep recent rooms mock for now as we don't track participation
   const recentRoomsData = mockRecentRooms.map(rr => rooms.find(r => r.id === rr.id) || rr).slice(0, 5);
 
-  if (userLoading || !currentUser) {
+  if (userLoading || roomsLoading || !currentUser) {
     return (
       <div className="flex min-h-screen w-full items-center justify-center bg-background">
         <div className="text-center text-muted-foreground flex items-center gap-4">

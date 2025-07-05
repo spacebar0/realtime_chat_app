@@ -24,11 +24,13 @@ export function CreateRoomDialog() {
   const { toast } = useToast()
   const { addRoom } = useRoom()
 
-  const handleCreateRoom = () => {
+  const handleCreateRoom = async () => {
     if (roomName.trim().length > 2) {
-      addRoom(roomName)
-      setOpen(false)
-      setRoomName("")
+      const success = await addRoom(roomName)
+      if (success) {
+        setOpen(false)
+        setRoomName("")
+      }
     } else {
         toast({
             variant: "destructive",
@@ -64,6 +66,7 @@ export function CreateRoomDialog() {
               onChange={(e) => setRoomName(e.target.value)}
               className="col-span-3"
               placeholder="e.g. Anime Fans"
+              onKeyDown={(e) => e.key === 'Enter' && handleCreateRoom()}
             />
           </div>
         </div>
